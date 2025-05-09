@@ -12,8 +12,9 @@ fi
 
 if [ -d "cupqc/cupqc-pkg-0.2.0/benchmarks" ]; then
     cd cupqc/cupqc-pkg-0.2.0/benchmarks
-    chmod +x benchmark_mlkem.sh
+    chmod +x benchmark_mlkem.sh benchmark_mldsa.sh
     ./benchmark_mlkem.sh
+    ./benchmark_mldsa.sh
     exit 0
 fi
 
@@ -22,5 +23,6 @@ tar -xvzf cupqc-pkg-0.2.0.tar.gz
 mv benchmarks cupqc/cupqc-pkg-0.2.0/
 cd cupqc/cupqc-pkg-0.2.0/benchmarks
 make
-chmod +x benchmark_mlkem.sh
+chmod +x benchmark_mlkem.sh benchmark_mldsa.sh
 ./benchmark_mlkem.sh
+./benchmark_mldsa.sh
