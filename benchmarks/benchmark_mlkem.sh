@@ -4,7 +4,7 @@ set -euo pipefail
 NUM_RUNS=1000
 EXE="./bench_kem"
 OUTDIR="output"
-OUTFILE="$OUTDIR/data.json"
+OUTFILE="$OUTDIR/mlkem_results.json"
 
 mkdir -p "$OUTDIR"
 
@@ -13,7 +13,7 @@ declare -a kg_768 enc_768 dec_768
 declare -a kg_1024 enc_1024 dec_1024
 
 for i in $(seq 1 "$NUM_RUNS"); do
-  echo -ne "Running $i/$NUM_RUNS\r"
+  echo "Running $i/$NUM_RUNS"
   out="$($EXE)"
 
   kg_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] KeyGen: \([0-9.]\+\).*/\1/p') )
@@ -28,7 +28,6 @@ for i in $(seq 1 "$NUM_RUNS"); do
   enc_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] Encaps: \([0-9.]\+\).*/\1/p') )
   dec_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] Decaps: \([0-9.]\+\).*/\1/p') )
 done
-echo ""
 
 compute_json() {
   local arr=( "$@" )
