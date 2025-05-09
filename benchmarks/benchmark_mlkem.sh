@@ -8,16 +8,14 @@ OUTFILE="$OUTDIR/data.json"
 
 mkdir -p "$OUTDIR"
 
-# arrays for each measurement
 declare -a kg_512 enc_512 dec_512
 declare -a kg_768 enc_768 dec_768
 declare -a kg_1024 enc_1024 dec_1024
 
-echo "Collecting $NUM_RUNS runs…"
 for i in $(seq 1 "$NUM_RUNS"); do
+  echo -ne "Running $i/$NUM_RUNS\r"
   out="$($EXE)"
 
-  # extract numeric values without '~'
   kg_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] KeyGen: \([0-9.]\+\).*/\1/p') )
   enc_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] Encaps: \([0-9.]\+\).*/\1/p') )
   dec_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] Decaps: \([0-9.]\+\).*/\1/p') )
@@ -30,8 +28,8 @@ for i in $(seq 1 "$NUM_RUNS"); do
   enc_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] Encaps: \([0-9.]\+\).*/\1/p') )
   dec_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] Decaps: \([0-9.]\+\).*/\1/p') )
 done
+echo ""
 
-# Function to filter IQR outliers and compute mean/std as JSON
 compute_json() {
   local arr=( "$@" )
   local sorted q1 q3 iqr lb ub filtered mean std n
@@ -64,16 +62,13 @@ compute_json() {
     END {
       mean=sum/n;
       std=sqrt(sum2/n - mean*mean);
-      # print JSON object
       printf("{\"mean\": %.2f, \"std\": %.2f}", mean, std);
     }' < <(printf "%s\n" "${filtered[@]}")
 }
 
-# Extract GPU info
 GPU_INFO=$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader,nounits | head -n 1)
 IFS=',' read -r gpu_name gpu_memory_total <<< "$GPU_INFO"
 
-# Emit JSON to file
 cat > "$OUTFILE" <<EOF
 {
   "GPU": {
