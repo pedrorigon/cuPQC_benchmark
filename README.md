@@ -2,6 +2,8 @@
 
 This repository contains a complete benchmark suite for evaluating the performance of cuPQC (CUDA-based post-quantum cryptography) implementations. It includes tools for automated benchmarking of both Key Encapsulation Mechanisms (KEM) and Digital Signature Algorithms (DSA), as well as a comprehensive compatibility checker to ensure your system meets the necessary hardware and software requirements.
 
+*Note: This project was inspired by and adapted from the work in the [Speed-Comparisons-cuPQC-Intel](https://github.com/lakshya-chopra/Speed-Comparisons-cuPQC-Intel) repository, with modifications for broader compatibility and extended functionality.*
+
 ## 📋 Prerequisites
 
 Before using the benchmark suite, ensure the following prerequisites are met:
