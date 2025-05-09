@@ -1,0 +1,15 @@
+# Ignore all compiled binaries
+/*.out
+/*.exe
+/*.o
+/*.bin
+
+# Ignore benchmark binaries
+/benchmark/*.out
+/benchmark/*.exe
+/benchmark/*.o
+/benchmark/*.bin
+
+# Ignore macOS system files
+.DS_Store
+/benchmark/.DS_Store
