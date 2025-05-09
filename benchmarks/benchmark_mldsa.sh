@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-NUM_RUNS=1000
+NUM_RUNS=20
 EXE="./bench_ds"
 OUTDIR="output"
 OUTFILE="$OUTDIR/ds_results.json"
