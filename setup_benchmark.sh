@@ -10,19 +10,25 @@ if [[ -z "$nvcc_version" ]] || ! awk -v ver="$nvcc_version" -v req="$REQUIRED_VE
     exit 1
 fi
 
-if [ -d "cupqc/cupqc-pkg-0.2.0/benchmarks" ]; then
-    cd cupqc/cupqc-pkg-0.2.0/benchmarks
+if [ -d "dependencies/cupqc-pkg-0.2.0" ]; then
+    echo "Dependencies already present."
+    cd benchmarks
     chmod +x benchmark_mlkem.sh benchmark_mldsa.sh
-    ./benchmark_mlkem.sh
-    ./benchmark_mldsa.sh
+    # ./benchmark_mlkem.sh
+    # ./benchmark_mldsa.sh
     exit 0
 fi
 
+mkdir -p dependencies
 wget https://developer.download.nvidia.com/compute/cupqc/redist/cupqc/cupqc-pkg-0.2.0.tar.gz
-tar -xvzf cupqc-pkg-0.2.0.tar.gz
-mv benchmarks cupqc/cupqc-pkg-0.2.0/
-cd cupqc/cupqc-pkg-0.2.0/benchmarks
+tar -xvzf cupqc-pkg-0.2.0.tar.gz -C dependencies/ --strip-components=1
+rm cupqc-pkg-0.2.0.tar.gz
+
+# Remove the benchmarks folder from dependencies to avoid confusion/duplication
+rm -rf dependencies/cupqc-pkg-0.2.0/benchmarks
+
+cd benchmarks
 make
 chmod +x benchmark_mlkem.sh benchmark_mldsa.sh
-./benchmark_mlkem.sh
-./benchmark_mldsa.sh
+# ./benchmark_mlkem.sh
+# ./benchmark_mldsa.sh

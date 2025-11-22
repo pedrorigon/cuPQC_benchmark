@@ -3,30 +3,65 @@ set -euo pipefail
 
 NUM_RUNS=20
 EXE="./bench_kem"
-OUTDIR="output"
+OUTDIR="../outputs"
 OUTFILE="$OUTDIR/mlkem_results.json"
 
 mkdir -p "$OUTDIR"
 
-declare -a kg_512 enc_512 dec_512
-declare -a kg_768 enc_768 dec_768
-declare -a kg_1024 enc_1024 dec_1024
+declare -a kg_512_throughput kg_512_mem kg_512_gpu
+declare -a enc_512_throughput enc_512_mem enc_512_gpu
+declare -a dec_512_throughput dec_512_mem dec_512_gpu
+
+declare -a kg_768_throughput kg_768_mem kg_768_gpu
+declare -a enc_768_throughput enc_768_mem enc_768_gpu
+declare -a dec_768_throughput dec_768_mem dec_768_gpu
+
+declare -a kg_1024_throughput kg_1024_mem kg_1024_gpu
+declare -a enc_1024_throughput enc_1024_mem enc_1024_gpu
+declare -a dec_1024_throughput dec_1024_mem dec_1024_gpu
 
 for i in $(seq 1 "$NUM_RUNS"); do
   echo "Running $i/$NUM_RUNS"
   out="$($EXE)"
 
-  kg_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] KeyGen: \([0-9.]\+\).*/\1/p') )
-  enc_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] Encaps: \([0-9.]\+\).*/\1/p') )
-  dec_512+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-512\] Decaps: \([0-9.]\+\).*/\1/p') )
+  # ML-KEM-512
+  kg_512_throughput+=( $(echo "$out" | sed -n '/ML-KEM-512 KeyGen/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  kg_512_mem+=( $(echo "$out" | sed -n '/ML-KEM-512 KeyGen/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  kg_512_gpu+=( $(echo "$out" | sed -n '/ML-KEM-512 KeyGen/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
 
-  kg_768+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-768\] KeyGen: \([0-9.]\+\).*/\1/p') )
-  enc_768+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-768\] Encaps: \([0-9.]\+\).*/\1/p') )
-  dec_768+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-768\] Decaps: \([0-9.]\+\).*/\1/p') )
+  enc_512_throughput+=( $(echo "$out" | sed -n '/ML-KEM-512 Encaps/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  enc_512_mem+=( $(echo "$out" | sed -n '/ML-KEM-512 Encaps/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  enc_512_gpu+=( $(echo "$out" | sed -n '/ML-KEM-512 Encaps/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
 
-  kg_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] KeyGen: \([0-9.]\+\).*/\1/p') )
-  enc_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] Encaps: \([0-9.]\+\).*/\1/p') )
-  dec_1024+=( $(printf '%s\n' "$out" | sed -n 's/^\[ML-KEM-1024\] Decaps: \([0-9.]\+\).*/\1/p') )
+  dec_512_throughput+=( $(echo "$out" | sed -n '/ML-KEM-512 Decaps/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  dec_512_mem+=( $(echo "$out" | sed -n '/ML-KEM-512 Decaps/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  dec_512_gpu+=( $(echo "$out" | sed -n '/ML-KEM-512 Decaps/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
+
+  # ML-KEM-768
+  kg_768_throughput+=( $(echo "$out" | sed -n '/ML-KEM-768 KeyGen/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  kg_768_mem+=( $(echo "$out" | sed -n '/ML-KEM-768 KeyGen/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  kg_768_gpu+=( $(echo "$out" | sed -n '/ML-KEM-768 KeyGen/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
+
+  enc_768_throughput+=( $(echo "$out" | sed -n '/ML-KEM-768 Encaps/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  enc_768_mem+=( $(echo "$out" | sed -n '/ML-KEM-768 Encaps/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  enc_768_gpu+=( $(echo "$out" | sed -n '/ML-KEM-768 Encaps/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
+
+  dec_768_throughput+=( $(echo "$out" | sed -n '/ML-KEM-768 Decaps/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  dec_768_mem+=( $(echo "$out" | sed -n '/ML-KEM-768 Decaps/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  dec_768_gpu+=( $(echo "$out" | sed -n '/ML-KEM-768 Decaps/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
+
+  # ML-KEM-1024
+  kg_1024_throughput+=( $(echo "$out" | sed -n '/ML-KEM-1024 KeyGen/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  kg_1024_mem+=( $(echo "$out" | sed -n '/ML-KEM-1024 KeyGen/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  kg_1024_gpu+=( $(echo "$out" | sed -n '/ML-KEM-1024 KeyGen/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
+
+  enc_1024_throughput+=( $(echo "$out" | sed -n '/ML-KEM-1024 Encaps/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  enc_1024_mem+=( $(echo "$out" | sed -n '/ML-KEM-1024 Encaps/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  enc_1024_gpu+=( $(echo "$out" | sed -n '/ML-KEM-1024 Encaps/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
+
+  dec_1024_throughput+=( $(echo "$out" | sed -n '/ML-KEM-1024 Decaps/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
+  dec_1024_mem+=( $(echo "$out" | sed -n '/ML-KEM-1024 Decaps/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  dec_1024_gpu+=( $(echo "$out" | sed -n '/ML-KEM-1024 Decaps/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
 done
 
 compute_json() {
@@ -75,19 +110,55 @@ cat > "$OUTFILE" <<EOF
     "memory_total_mb": $gpu_memory_total
   },
   "ML-KEM-512": {
-    "KeyGen": $(compute_json "${kg_512[@]}"),
-    "Encaps": $(compute_json "${enc_512[@]}"),
-    "Decaps": $(compute_json "${dec_512[@]}")
+    "KeyGen": {
+      "throughput": $(compute_json "${kg_512_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${kg_512_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${kg_512_gpu[@]}")
+    },
+    "Encaps": {
+      "throughput": $(compute_json "${enc_512_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${enc_512_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${enc_512_gpu[@]}")
+    },
+    "Decaps": {
+      "throughput": $(compute_json "${dec_512_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${dec_512_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${dec_512_gpu[@]}")
+    }
   },
   "ML-KEM-768": {
-    "KeyGen": $(compute_json "${kg_768[@]}"),
-    "Encaps": $(compute_json "${enc_768[@]}"),
-    "Decaps": $(compute_json "${dec_768[@]}")
+    "KeyGen": {
+      "throughput": $(compute_json "${kg_768_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${kg_768_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${kg_768_gpu[@]}")
+    },
+    "Encaps": {
+      "throughput": $(compute_json "${enc_768_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${enc_768_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${enc_768_gpu[@]}")
+    },
+    "Decaps": {
+      "throughput": $(compute_json "${dec_768_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${dec_768_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${dec_768_gpu[@]}")
+    }
   },
   "ML-KEM-1024": {
-    "KeyGen": $(compute_json "${kg_1024[@]}"),
-    "Encaps": $(compute_json "${enc_1024[@]}"),
-    "Decaps": $(compute_json "${dec_1024[@]}")
+    "KeyGen": {
+      "throughput": $(compute_json "${kg_1024_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${kg_1024_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${kg_1024_gpu[@]}")
+    },
+    "Encaps": {
+      "throughput": $(compute_json "${enc_1024_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${enc_1024_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${enc_1024_gpu[@]}")
+    },
+    "Decaps": {
+      "throughput": $(compute_json "${dec_1024_throughput[@]}"),
+      "peak_mem_mb": $(compute_json "${dec_1024_mem[@]}"),
+      "peak_gpu_util": $(compute_json "${dec_1024_gpu[@]}")
+    }
   }
 }
 EOF

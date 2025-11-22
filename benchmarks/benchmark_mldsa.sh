@@ -3,8 +3,8 @@ set -euo pipefail
 
 NUM_RUNS=20
 EXE="./bench_ds"
-OUTDIR="output"
-OUTFILE="$OUTDIR/ds_results.json"
+OUTDIR="../outputs"
+OUTFILE="$OUTDIR/mldsa_results.json"
 
 mkdir -p "$OUTDIR"
 
@@ -26,39 +26,39 @@ for i in $(seq 1 "$NUM_RUNS"); do
   
   # Extrai métricas específicas para cada operação/algoritmo
   kg_44_throughput+=( $(echo "$out" | sed -n '/ML-DSA-44 Key Generation/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  kg_44_mem+=( $(echo "$out" | sed -n '/ML-DSA-44 Key Generation/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  kg_44_mem+=( $(echo "$out" | sed -n '/ML-DSA-44 Key Generation/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   kg_44_gpu+=( $(echo "$out" | sed -n '/ML-DSA-44 Key Generation/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   sign_44_throughput+=( $(echo "$out" | sed -n '/ML-DSA-44 Signing/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  sign_44_mem+=( $(echo "$out" | sed -n '/ML-DSA-44 Signing/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  sign_44_mem+=( $(echo "$out" | sed -n '/ML-DSA-44 Signing/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   sign_44_gpu+=( $(echo "$out" | sed -n '/ML-DSA-44 Signing/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   verify_44_throughput+=( $(echo "$out" | sed -n '/ML-DSA-44 Verification/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  verify_44_mem+=( $(echo "$out" | sed -n '/ML-DSA-44 Verification/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  verify_44_mem+=( $(echo "$out" | sed -n '/ML-DSA-44 Verification/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   verify_44_gpu+=( $(echo "$out" | sed -n '/ML-DSA-44 Verification/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   kg_65_throughput+=( $(echo "$out" | sed -n '/ML-DSA-65 Key Generation/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  kg_65_mem+=( $(echo "$out" | sed -n '/ML-DSA-65 Key Generation/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  kg_65_mem+=( $(echo "$out" | sed -n '/ML-DSA-65 Key Generation/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   kg_65_gpu+=( $(echo "$out" | sed -n '/ML-DSA-65 Key Generation/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   sign_65_throughput+=( $(echo "$out" | sed -n '/ML-DSA-65 Signing/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  sign_65_mem+=( $(echo "$out" | sed -n '/ML-DSA-65 Signing/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  sign_65_mem+=( $(echo "$out" | sed -n '/ML-DSA-65 Signing/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   sign_65_gpu+=( $(echo "$out" | sed -n '/ML-DSA-65 Signing/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   verify_65_throughput+=( $(echo "$out" | sed -n '/ML-DSA-65 Verification/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  verify_65_mem+=( $(echo "$out" | sed -n '/ML-DSA-65 Verification/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  verify_65_mem+=( $(echo "$out" | sed -n '/ML-DSA-65 Verification/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   verify_65_gpu+=( $(echo "$out" | sed -n '/ML-DSA-65 Verification/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   kg_87_throughput+=( $(echo "$out" | sed -n '/ML-DSA-87 Key Generation/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  kg_87_mem+=( $(echo "$out" | sed -n '/ML-DSA-87 Key Generation/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  kg_87_mem+=( $(echo "$out" | sed -n '/ML-DSA-87 Key Generation/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   kg_87_gpu+=( $(echo "$out" | sed -n '/ML-DSA-87 Key Generation/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   sign_87_throughput+=( $(echo "$out" | sed -n '/ML-DSA-87 Signing/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  sign_87_mem+=( $(echo "$out" | sed -n '/ML-DSA-87 Signing/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  sign_87_mem+=( $(echo "$out" | sed -n '/ML-DSA-87 Signing/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   sign_87_gpu+=( $(echo "$out" | sed -n '/ML-DSA-87 Signing/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
   
   verify_87_throughput+=( $(echo "$out" | sed -n '/ML-DSA-87 Verification/{n;s/^  Throughput: \([0-9.]\+\) ops\/sec/\1/p}') )
-  verify_87_mem+=( $(echo "$out" | sed -n '/ML-DSA-87 Verification/{n;n;s/^  GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
+  verify_87_mem+=( $(echo "$out" | sed -n '/ML-DSA-87 Verification/{n;n;s/^  Peak GPU Memory Used: \([0-9.]\+\) MB/\1/p}') )
   verify_87_gpu+=( $(echo "$out" | sed -n '/ML-DSA-87 Verification/{n;n;n;s/^  Peak GPU Utilization: \([0-9.]\+\)%/\1/p}') )
 done
 
