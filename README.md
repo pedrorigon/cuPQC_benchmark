@@ -221,10 +221,10 @@ Results are averaged over 20 runs with outlier filtering using the Interquartile
 If you use this benchmark suite in your research, please cite:
 
 ```bibtex
-@software{rigon2024cupqc_benchmark,
+@software{rigon2025cupqc_benchmark,
   author = {Rigon, Pedro},
   title = {cuPQC Benchmark: Performance Evaluation Suite for CUDA Post-Quantum Cryptography},
-  year = {2024},
+  year = {2025},
   url = {https://github.com/pedrorigon/cuPQC_benchmark},
   note = {Benchmark suite for ML-KEM and ML-DSA implementations using NVIDIA cuPQC}
 }
