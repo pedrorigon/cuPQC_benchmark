@@ -89,8 +89,8 @@ Benchmark results are saved as JSON files in the `outputs/` directory.
 ```json
 {
   "GPU": {
-    "name": "NVIDIA GeForce RTX 3070",
-    "memory_total_mb": 8192
+    "name": "NVIDIA GeForce RTX 4090",
+    "memory_total_mb":  24564
   },
   "ML-KEM-512": {
     "KeyGen": {
@@ -151,8 +151,8 @@ Benchmark results are saved as JSON files in the `outputs/` directory.
 ```json
 {
   "GPU": {
-    "name": "NVIDIA GeForce RTX 3070",
-    "memory_total_mb": 8192
+    "name": "NVIDIA GeForce RTX 4090",
+    "memory_total_mb":  24564
   },
   "ML-DSA-44": {
     "KeyGen": {
