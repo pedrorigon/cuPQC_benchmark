@@ -2,6 +2,8 @@ dependencies/
 outputs/
 benchmarks/bench_kem
 benchmarks/bench_ds
+benchmarks/bench_kem_latency
+benchmarks/bench_ds_latency
 benchmarks/output/
 *.o
 *.json

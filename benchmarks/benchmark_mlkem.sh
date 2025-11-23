@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export LC_NUMERIC=C
 
 NUM_RUNS=20
 EXE="./bench_kem"

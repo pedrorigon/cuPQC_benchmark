@@ -34,7 +34,7 @@ cd cuPQC_benchmark
 Make scripts executable:
 
 ```bash
-chmod +x setup_benchmark.sh clean_build.sh
+chmod +x benchmark_pipeline.sh clean_build.sh
 chmod +x compatibility_check.py
 ```
 
@@ -53,10 +53,13 @@ Verify system requirements before running benchmarks:
 Download dependencies, compile benchmarks, and run:
 
 ```bash
-./setup_benchmark.sh
+./benchmark_pipeline.sh
 ```
 
-This script will:
+This script will (default runs normal benchmarks). Use the optional argument `latency` to run only latency extraction:
+```bash
+./benchmark_pipeline.sh latency
+```
 1. Download cuPQC package to `dependencies/`
 2. Compile benchmark executables
 3. Execute benchmark scripts
@@ -78,6 +81,12 @@ Restore repository to clean state:
 
 ```bash
 ./clean_build.sh
+```
+
+### Usage
+
+```bash
+./benchmark_pipeline.sh
 ```
 
 ## Output Format
